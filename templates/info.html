@@ -173,6 +173,8 @@
                     </p>
                 </div>
             </div>
+
+            {% if iso2_country == "US" %}
             <div class="row hospital-data">
                 <div class="data-container col-12 col-md mr-0 mr-md-3">
                     <div class="data-number">
@@ -208,6 +210,11 @@
                     </div>
                 </div>
             </div>
+            {% else %}
+            <p class="trip-subtitle pb-5">
+                Hospitals data are currently only available in the US.
+            </p>
+            {% endif %}
 
             <h1 class="text-center">
                 Nearby Hospitals

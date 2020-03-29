@@ -206,7 +206,7 @@ def info():
     percentageData = round(
         current_confirmed_case / predicted_case_data * 100)
 
-    return render_template('info.html', display_location=display_location, iso2Country=iso2_country, currentCase=current_confirmed_case, predictedCase=predicted_case_data, percentageData=percentageData, bedsAvailableCity=beds_available_city, bedsAvailableState=beds_available_state, bedsUtilState=beds_util_state, addressValid=addressValid)
+    return render_template('info.html', iso2_country=iso2_country, display_location=display_location, iso2Country=iso2_country, currentCase=current_confirmed_case, predictedCase=predicted_case_data, percentageData=percentageData, bedsAvailableCity=beds_available_city, bedsAvailableState=beds_available_state, bedsUtilState=beds_util_state, addressValid=addressValid)
 
 
 if __name__ == "__main__":
