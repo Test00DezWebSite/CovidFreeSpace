@@ -1,0 +1,20 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pylint = "*"
+autopep8 = "*"
+
+[packages]
+flask = "*"
+countryinfo = "*"
+country-converter = "*"
+twilio = "*"
+pymongo = "*"
+dnspython = "*"
+sendgrid = "*"
+
+[requires]
+python_version = "3.7"

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+
+        <!-- Bootstrap CSS -->
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+            integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+            crossorigin="anonymous"
+        />
+        <link
+            href="https://fonts.googleapis.com/css?family=Muli:400,700&display=swap"
+            rel="stylesheet"
+        />
+
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='css/styles.css') }}"
+        />
+        <link
+            rel="stylesheet"
+            href="https://js.arcgis.com/4.14/esri/themes/dark/main.css"
+        />
+        <script defer src="https://js.arcgis.com/4.14/"></script>
+        <script
+            src="https://kit.fontawesome.com/98977d894b.js"
+            crossorigin="anonymous"
+        ></script>
+        <script>
+            window.queryDateEnd = "{{query_date_end}}";
+            window.queryDateStart = "{{query_date_start}}";
+            window.dlocation = "{{ display_location }}";
+        </script>
+        <script>
+            var employer = `
+            One of your customer or employer wants you to join the #CovidChampion movement by allowing your workers to #WorkFromHome and practice social distancing..
+            <br><br>
+            Let's help make the world a #CovidFreeSpace again by practicing social distancing and working from home if possible.
+            <br><br>
+            You can learn more about the spread of COVID-19 in your area by clicking the button below. We at CovidFreeSpace have rigorously analyzed the numbers using data science methodologies, so that your business can make the best decision for the company and the community.
+            `;
+
+            var friend = `
+            Somebody that cares about you wants you to stay safe from COVID-19. This novel virus has been a growing concern to everybody worldwide, and it has made our world less fun to live in :(
+            <br><br>
+            Let's help make the world a #CovidFreeSpace again by practicing social distancing and #WorkFromHome if possible.
+            <br><br>
+            You can learn more about the spread of COVID-19 in your area by clicking the button below. We at CovidFreeSpace have worked hard to analyze the numbers using data science magic, so that you don't need to do all of that by yourself!
+            `;
+
+            function changeLetterText() {
+                letterId = document.getElementById("letter_id").value;
+
+                if (letterId == 0) {
+                    document.getElementById("letter-text").innerHTML = friend;
+                } else {
+                    document.getElementById("letter-text").innerHTML = employer;
+                }
+            }
+        </script>
+
+        <title>CoronAdvisor | Trip Information</title>
+    </head>
+    <body onload="changeLetterText()">
+        <div class="container">
+            {% if addressValid == "true" %}
+            <h5 class="text-center mt-5" style="color: #7ce298">
+                We have send a letter to the recipient you request.<br />
+                Thank you for playing your part in making the world a
+                #CovidFreeSpace
+            </h5>
+            {% elif addressValid == "false" %}
+            <h5 class="text-center mt-5" style="color: #fa8181">
+                There's an error when trying to send your letter.<br />
+                Try checking the phone number or email again.
+            </h5>
+            {% else %}{% endif %}
+            <p class="trip-subtitle">
+                The situation at
+            </p>
+            <h1 class="text-center trip-title">
+                {{ display_location }}
+            </h1>
+
+            <center>
+                <img
+                    class="city-img"
+                    src="{{ url_for('static', filename='/img/city.svg') }}"
+                />
+            </center>
+
+            <div class="row city-data">
+                <div class="data-container col-12 col-md mr-0 mr-md-3">
+                    <div class="data-number">
+                        {{currentCase}}
+                    </div>
+                    <div class="data-title">
+                        Confirmed Case
+                    </div>
+                </div>
+                <div class="data-container col-12 col-md mr-0 mr-md-3">
+                    <div class="data-number">
+                        {{predictedCase}}
+                    </div>
+                    <div class="data-title">
+                        Predicted Cases
+                    </div>
+                    <div class="data-subtitle">
+                        (in 30 days)
+                    </div>
+                </div>
+                <div class="data-container col-12 col-md">
+                    <div class="data-number">
+                        {{percentageData}}%
+                    </div>
+                    <div class="data-title">
+                        Rate of Spread
+                    </div>
+                    <div class="data-subtitle">
+                        (month-over-month)
+                    </div>
+                </div>
+            </div>
+            <center>
+                <div class="ai-info">
+                    We analyzed live COVID-19 data using artificial intelligence
+                    to give you the best approximation of the spread of this
+                    novel virus.
+                </div>
+            </center>
+            <div
+                class="row mt-5"
+                style="display: flex; justify-content: center; margin: 0; padding: 0;"
+            >
+                <a href="{{ url_for('index') }}"
+                    ><button type="button" class="btn btn-primary input-button">
+                        Search Another Location
+                    </button></a
+                >
+            </div>
+
+            <h1 class="text-center spread">
+                What Our World Looks Like
+            </h1>
+
+            <div class="row viewDiv" id="viewDiv"></div>
+
+            <div class="hospital-row row">
+                <div class="col-12 col-md">
+                    <center>
+                        <img
+                            src="{{ url_for('static', filename='/img/hospital.svg') }}"
+                        />
+                    </center>
+                </div>
+                <div class="col-12 col-md">
+                    <h4>Hospitals is hard at work.</h4>
+                    <p>
+                        The exponential spread of the virus puts our health care
+                        system on an overtime. Without proper isolation, our
+                        health care system might not be able to keep up.
+
+                        <br /><br />We often overestimate our hospital’s
+                        capacity in handling patient, here’s what the data
+                        actually says.
+                    </p>
+                </div>
+            </div>
+            <div class="row hospital-data">
+                <div class="data-container col-12 col-md mr-0 mr-md-3">
+                    <div class="data-number">
+                        {{bedsAvailableCity}}
+                    </div>
+                    <div class="data-title">
+                        Beds Available
+                    </div>
+                    <div class="data-subtitle">
+                        (in your city)
+                    </div>
+                </div>
+                <div class="data-container col-12 col-md mr-0 mr-md-3">
+                    <div class="data-number">
+                        {{bedsAvailableState}}
+                    </div>
+                    <div class="data-title">
+                        Beds Available
+                    </div>
+                    <div class="data-subtitle">
+                        (in your state)
+                    </div>
+                </div>
+                <div class="data-container col-12 col-md">
+                    <div class="data-number">
+                        {{bedsUtilState}}%
+                    </div>
+                    <div class="data-title">
+                        Est. Utilization
+                    </div>
+                    <div class="data-subtitle">
+                        (in your state)
+                    </div>
+                </div>
+            </div>
+
+            <h1 class="text-center">
+                Nearby Hospitals
+            </h1>
+            <div id="map"></div>
+
+            <form id="letter-form" action="/letter" method="POST">
+                <div class="mail-row row">
+                    <div class="col-12 col-md">
+                        <h4>Spread the COVID-19 Awareness Love</h4>
+                        <p>
+                            The novel coronavirus is spreading fast, keep the
+                            people you care about safe by reminding them to
+                            #SocialDistance and #WorkFromHome
+                        </p>
+                        <div class="input-group mb-3">
+                            <select
+                                class="custom-select"
+                                id="letter_id"
+                                name="letter_type"
+                                onchange="changeLetterText()"
+                            >
+                                <option value="0" selected
+                                    >Letter to Friend</option
+                                >
+                                <option value="1">Letter to Employer</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md">
+                        <center>
+                            <img
+                                src="{{ url_for('static', filename='/img/mail.svg') }}"
+                            />
+                        </center>
+                    </div>
+                </div>
+
+                <div class="letter row">
+                    <div class="input-group mb-3">
+                        <div class="row recipient-container">
+                            <div class="input-group-prepend col-12 col-md-auto">
+                                Dear
+                            </div>
+                            <input
+                                type="text"
+                                class="form-control col-12 col-md-auto"
+                                name="name"
+                                placeholder="Recipient Name"
+                                aria-label="Recipient Name"
+                                aria-describedby="basic-addon1"
+                            />
+                        </div>
+                    </div>
+
+                    <p class="letter-text" id="letter-text"></p>
+
+                    <div class="row landing-row-search">
+                        <div class="col-12 col-md-9">
+                            <div class="input-container-no">
+                                <div class="row">
+                                    <div class="col left">
+                                        <input
+                                            id="searchTextField"
+                                            name="address"
+                                            type="text"
+                                            class="form-control"
+                                            placeholder="Phone Number / Email"
+                                        />
+                                        <input
+                                            type="hidden"
+                                            name="location"
+                                            value="{{display_location}}"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-3 mt-3 mt-md-0">
+                            <button
+                                type="submit"
+                                value="Submit"
+                                form="letter-form"
+                                class="btn btn-primary input-button"
+                            >
+                                Send Letter
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script
+            defer
+            src="{{ url_for('static', filename='js/hospital-map.js') }}"
+        ></script>
+        <script
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC3ABfQlr8Nj-T8xLSLcWePhYzA982e87k&callback=initMap&libraries=places"
+            async
+            defer
+        ></script>
+        <script
+            defer
+            src="{{ url_for('static', filename='js/map.js') }}"
+        ></script>
+        <script
+            src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"
+        ></script>
+    </body>
+</html>
