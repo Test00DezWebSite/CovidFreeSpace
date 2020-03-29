@@ -189,15 +189,17 @@ def info():
 
         beds_available_city = math.floor(beds_available_city_data["NumStaffedBeds"] * (
             1-beds_available_city_data["AveBedUtilizationRate"]) if beds_available_city_data else 0)
-        beds_available_state = max(math.floor(
-            state_bed_sum * (1-state_util_ave) - current_confirmed_case), 0)
+        beds_available_state = math.floor(state_bed_sum * (1-state_util_ave))
 
-        if beds_available_state == 0:
-            beds_util_state = 100
+        if current_confirmed_case > beds_available_state:
+            beds_util_state = math.floor(
+                (current_confirmed_case + (state_bed_sum * state_util_ave)) / state_bed_sum * 100)
             beds_available_city = 0
+            beds_available_state = 0
         else:
             beds_util_state = math.floor(
-                beds_available_state / state_bed_sum * 100)
+                (current_confirmed_case + (state_bed_sum * state_util_ave)) / state_bed_sum * 100)
+            beds_available_state = beds_available_state - current_confirmed_case
 
     display_location = city + ", " + country
 
